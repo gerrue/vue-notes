@@ -1,0 +1,130 @@
+Javascript
+    - Babel or TypeScript
+        - You don't need either, but if you want you can use either
+    - Babel Polyfils vs Polyfill.io
+        - Polyfill.io only uses the polyfills that the browser you are uses needs
+        - From Chris: Drop IE support
+
+HTML
+    - JSX/render functions/templates
+        - JSX can be good but templates are more used
+        - Look into render functions
+        - Render functions are more flexible
+        - Vue has more built in to handle templates than render functions
+            - example: static and dynamic classes
+
+    - Functional Component
+        - Difference
+            - functional: true in script or functional in template
+            - improves performance
+                - can be more performant when components need to change many times 
+                - acts as part of the parent component instead of having its own state and instance
+
+CSS
+    - global/scoped/module
+    - Module
+        - When used styles get attached to $style in the vue instance
+        - Modules can be used as class names
+
+Components
+    - Chris' order for SFC
+        - script, template, style
+    - Don't use .js files when template and styles is not used
+        - Vue loader makes the name only from vue files
+        - Adding template and styles is a lot easier
+    - You can use other tags like doc in the component
+    
+SFC standard Practice
+    - Single File Component name spacing
+        - kebab-case or PascalCase
+    - Simple components can be called with Base to let you know that it is simple like button/icon/table/input
+    - Components that are only going to be used once and only once using 'The' in the component name
+      is used
+    - Components that are coupled to other components should start with the parent component name followed by what they are
+        - example: <TodoList> and <TodoListItem>
+    - Grouping components that aren't necessarily tied together but are part of the same group should be named the same
+        - example:
+            - <GroupSearchButton> and <ExcludeFromSearchInput>
+            - should be <SearchGroupButton> and <SearchExcludeFromInput>
+
+Useful patterns in styleguide
+    - Wrap third party components in your own components
+        - If you decide to change it is a lot easier to change
+        - You can limit the scope of the component to be what you want instead of allowing whatever the component allows
+
+Component Organization
+    - Chris believes that flat is better
+        - Easier to search and find
+
+Transparent Components
+    - TODO look into inheritAttrs: false
+        - $attrs can be used to bind to a specific element
+    - TODO look into attrs
+    - Attrs allow you to define like prop things without defining the prop in the component
+
+Routing
+    - Route guards can be used
+    - TODO: look at beforeRouteEnter, beforeRouteUpdate, beforeRouteLeave
+        - Can catch problems before entering the component which means one less push that has to happen
+        - Can Authorize which means the component doesn't have to
+    - Lazy loading
+        - example: component: import('@/views/componentName')
+        - This will only fetch this component when this route is visited
+        - WARNING: This can be less optimal because if they are in a part that loads slowly they will have to load this component on first page load which may be slow
+    - On <router-view /> you can specify a key which will reuse an already loaded component so it doesn't have to build another
+        - You no longer have to use beforeRouteUpdate
+        - WARNING: Has slightly lower page loads use <keep-alive> with include if it's a problem
+            - If you don't use include you will introduce a memory leak
+    - Routes may not always render the same component so `component` property in routes can be a function that resolves the right 
+      component
+    - NOTE: When using progress bars for pages you can use router.beforeResolve and router.afterResolve to start and done to show
+            animations for users
+    - NOTE: Users will wait longer with a branded animation on page load
+    - NOTE: When using Vuex you can import and use the store in routes to make sure the things are loaded before routes resolve
+    - XTREME LAZY LOADED ROUTES
+        - When lazy loading a component you can add loading, error, delay and timeout property
+        - Example:
+            - {
+		path: '/admin',
+		name: 'admin-dashboard',
+		component: () => ({
+		  component: import('@views/admin'),
+		  // Component to use while loading
+		  loading: require('@views/loading').default,
+		  // A component to use if the load fails
+		  error: require('@views/timeout').default,
+		  // Delay before showing the loading component. Default: 200ms.
+		  delay: 200,
+		  // The error component will be displayed if a timeout is
+		  // provided and exceeded. Default: Infinity.
+		  timeout: 5000
+		})
+	      }
+        - NOTE: Go to slide 43
+    - Scroll Behavior
+        - Using scroll behavior can save the positioning of a page that was visited before
+
+Meta info for Views
+    - You can change the things like <title> with metaInfo() property in the view
+    
+Layout Tips
+    - Avoid global css recommeded to use scoped css
+
+Vuex
+    - Getters, Actions and Mutations are global
+    - If you have two modules with the same action or mutation it will run both
+        - Might be what you want but you may want to namespace your actions and mutations
+    - TODO: Vuex action initializers
+    - TODO: Look at helpers where you can add getters or actions to value and just import that value instead of
+            all the actions/getters
+
+
+
+OTHERS
+    - https://github.com/chrisvfritz/vue-enterprise-boilerplate/
+    - https://github.com/chrisvfritz/7-secret-patterns
+    - http://slides.com/chrisvfritz/vueconf-workshop-2018-03#/
+    - TODO: checkout listeners in _base-input.vue
+        - talks about adding all listeners to input but changing how input works
+    - TODO: component keep alive for routing to keep state of a component
+    - TODO: Look into hygen
